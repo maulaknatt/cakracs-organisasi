@@ -19,8 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS if APP_URL is https (Cloudflare Tunnel)
-        if (config('app.url') && str_starts_with(config('app.url'), 'https://')) {
+        // Force HTTPS in production / Vercel
+        if (config('app.env') === 'production' || str_contains(request()->getHost(), 'vercel.app')) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 

@@ -33,6 +33,8 @@
         "QUEUE_CONNECTION": "sync",
         "APP_MAINTENANCE_STORE": "array",
         "DB_CONNECTION": "pgsql",
-        "DB_PORT": "6543"
+        "DB_HOST": "aws-1-ap-southeast-2.pooler.supabase.com",
+        "DB_PORT": "5432",
+        "DB_USERNAME": "postgres.avzgbcszjpojelmrgnbw"
     }
 }

@@ -1,7 +1,6 @@
 {
     "version": 2,
     "outputDirectory": "public",
-    "installCommand": "composer install --no-dev && php artisan migrate --force",
     "framework": null,
     "functions": {
         "api/index.php": {

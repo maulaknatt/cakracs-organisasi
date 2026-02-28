@@ -40,13 +40,20 @@ class DashboardController extends Controller
         $belumSelesaiTugas = $totalTugas - $selesaiTugas;
         $progressPercentage = $totalTugas > 0 ? round(($selesaiTugas / $totalTugas) * 100) : 0;
 
-        // Get online users (active in last 5 minutes)
-        $onlineUserIds = \DB::table('sessions')
-            ->whereNotNull('user_id')
-            ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp())
-            ->pluck('user_id');
-
-        $onlineUsers = User::whereIn('id', $onlineUserIds)->limit(5)->get();
+        // Get online users - only when using database session driver
+        try {
+            if (config('session.driver') === 'database') {
+                $onlineUserIds = \DB::table('sessions')
+                    ->whereNotNull('user_id')
+                    ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp())
+                    ->pluck('user_id');
+                $onlineUsers = User::whereIn('id', $onlineUserIds)->limit(5)->get();
+            } else {
+                $onlineUsers = collect();
+            }
+        } catch (\Exception $e) {
+            $onlineUsers = collect();
+        }
 
         // Task Trend Data (Last 7 Days)
         $taskTrendData = [];

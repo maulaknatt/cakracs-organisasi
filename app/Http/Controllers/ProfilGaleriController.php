@@ -18,7 +18,7 @@ class ProfilGaleriController extends Controller
             $query->where('kegiatan_id', $request->kegiatan);
         }
         $galeri = $query->orderByDesc('created_at')->get();
-        $tahunList = Dokumentasi::selectRaw('YEAR(created_at) as tahun')->distinct()->pluck('tahun');
+        $tahunList = Dokumentasi::selectRaw('EXTRACT(YEAR FROM created_at)::int as tahun')->distinct()->pluck('tahun');
         $kegiatanList = Kegiatan::orderBy('judul')->get();
 
         return view('profil.galeri', compact('galeri', 'tahunList', 'kegiatanList'));

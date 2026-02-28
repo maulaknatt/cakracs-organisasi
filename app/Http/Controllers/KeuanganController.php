@@ -78,10 +78,10 @@ class KeuanganController extends Controller
         $query->orderBy($sortBy, $sortOrder)->orderBy('id', 'desc');
 
         // Global Organization Stats (Always consistent)
-        $globalStats = \App\Models\Keuangan::selectRaw('
-            SUM(CASE WHEN jenis = "masuk" THEN jumlah ELSE 0 END) as total_pemasukan,
-            SUM(CASE WHEN jenis = "keluar" THEN jumlah ELSE 0 END) as total_pengeluaran
-        ')->first();
+        $globalStats = \App\Models\Keuangan::selectRaw("
+            SUM(CASE WHEN jenis = 'masuk' THEN jumlah ELSE 0 END) as total_pemasukan,
+            SUM(CASE WHEN jenis = 'keluar' THEN jumlah ELSE 0 END) as total_pengeluaran
+        ")->first();
 
         $globalPemasukan = $globalStats->total_pemasukan ?? 0;
         $globalPengeluaran = $globalStats->total_pengeluaran ?? 0;
@@ -118,7 +118,7 @@ class KeuanganController extends Controller
             }
         }
 
-        $years = \App\Models\Keuangan::selectRaw('YEAR(tanggal) as year')
+        $years = \App\Models\Keuangan::selectRaw('EXTRACT(YEAR FROM tanggal)::int as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');

@@ -65,12 +65,20 @@ class AnggotaController extends Controller
         $jabatanList = \App\Models\User::distinct()->pluck('jabatan')->filter()->sort();
         $roles = \DB::table('roles')->where('nama_role', '!=', 'Super Admin')->orderBy('nama_role')->get();
 
-        // Get online user IDs (active in last 5 minutes)
-        $onlineUserIds = \DB::table('sessions')
-            ->whereNotNull('user_id')
-            ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp())
-            ->pluck('user_id')
-            ->toArray();
+        // Get online user IDs - only when using database session driver
+        try {
+            if (config('session.driver') === 'database') {
+                $onlineUserIds = \DB::table('sessions')
+                    ->whereNotNull('user_id')
+                    ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp())
+                    ->pluck('user_id')
+                    ->toArray();
+            } else {
+                $onlineUserIds = [];
+            }
+        } catch (\Exception $e) {
+            $onlineUserIds = [];
+        }
 
         return view('dashboard.anggota.index', compact('anggota', 'jabatanList', 'roles', 'onlineUserIds'));
     }

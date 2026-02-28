@@ -77,7 +77,7 @@ class DokumentasiController extends Controller
 
         // Get filter options
         $kegiatanList = \App\Models\Kegiatan::orderBy('judul')->get();
-        $years = \App\Models\Dokumentasi::selectRaw('YEAR(created_at) as year')
+        $years = \App\Models\Dokumentasi::selectRaw('EXTRACT(YEAR FROM created_at)::int as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');

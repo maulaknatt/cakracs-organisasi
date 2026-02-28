@@ -84,7 +84,7 @@ class PengumumanController extends Controller
         $pengumuman = $query->withCount(['likes', 'comments'])->paginate(100)->withQueryString();
 
         // Get filter options
-        $years = \App\Models\Pengumuman::selectRaw('YEAR(tanggal) as year')
+        $years = \App\Models\Pengumuman::selectRaw('EXTRACT(YEAR FROM tanggal)::int as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');

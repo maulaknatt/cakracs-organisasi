@@ -61,10 +61,19 @@ class User extends Authenticatable implements JWTSubject
 
     public function isOnline()
     {
-        return \DB::table('sessions')
-            ->where('user_id', $this->id)
-            ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp())
-            ->exists();
+        // Sessions table only exists when SESSION_DRIVER=database.
+        // On Vercel we use cookie driver, so return false gracefully.
+        try {
+            if (config('session.driver') !== 'database') {
+                return false;
+            }
+            return \DB::table('sessions')
+                ->where('user_id', $this->id)
+                ->where('last_activity', '>=', now()->subMinutes(5)->getTimestamp())
+                ->exists();
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function getRoleNameAttribute()

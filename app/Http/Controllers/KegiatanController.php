@@ -78,7 +78,7 @@ class KegiatanController extends Controller
         $kegiatans = $query->latest()->paginate(12)->withQueryString();
 
         // Get filter options
-        $years = Kegiatan::selectRaw('YEAR(tanggal_mulai) as year')
+        $years = Kegiatan::selectRaw('EXTRACT(YEAR FROM tanggal_mulai)::int as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');

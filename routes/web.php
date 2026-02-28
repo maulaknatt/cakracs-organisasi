@@ -3,13 +3,31 @@
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
-// MIGRATION ROUTE
+// MIGRATION ROUTE (Ultra Robust)
 Route::get('/gas-migrate-sekarang', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh --seed --force');
-        return "Berhasil Mas! Database sudah terisi semua tabel. Output: " . \Illuminate\Support\Facades\Artisan::output();
+        $output = "Memulai proses... <br>";
+        
+        // 1. Cek tabel migrations
+        if (!\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
+            $output .= "Tabel migrations belum ada, membuat sekarang... <br>";
+            \Illuminate\Support\Facades\Artisan::call('migrate:install', ['--force' => true]);
+            $output .= "Instalasi tabel migrasi: " . \Illuminate\Support\Facades\Artisan::output() . "<br>";
+        }
+
+        // 2. Jalankan Migrasi
+        $output .= "Menjalankan migrasi tabel... <br>";
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output .= "<pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+
+        // 3. Jalankan Seeder
+        $output .= "Mengisi data awal (seeding)... <br>";
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        $output .= "Seeding: Success! <br>";
+
+        return "🔥 <b>BERHASIL MAS!</b> Website sudah siap. <br><br> Detail Output: <br>" . $output . "<br> <a href='/'>Klik di sini untuk ke Beranda</a>";
     } catch (\Exception $e) {
-        return "Error Migrasi: " . $e->getMessage();
+        return "❌ <b>Gagal Mas:</b> " . $e->getMessage() . "<br><br> Coba cek lagi URL/Username di Vercel Dashboard.";
     }
 });
 

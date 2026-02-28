@@ -9,8 +9,24 @@
     },
     "routes": [
         {
-            "src": "/(css|js|images|sounds|fonts|build|storage|favicon.*|robots.txt|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.ico|.*\\.webp)/(.*)",
+            "src": "/favicon\\.(ico|png|svg|webp)",
+            "dest": "/public/$0"
+        },
+        {
+            "src": "/robots\\.txt",
+            "dest": "/public/robots.txt"
+        },
+        {
+            "src": "/monyet\\.png",
+            "dest": "/public/monyet.png"
+        },
+        {
+            "src": "/(css|js|images|sounds|fonts|build|storage)/(.*)",
             "dest": "/public/$1/$2"
+        },
+        {
+            "src": "/.*\\.(png|jpg|jpeg|gif|svg|ico|webp|mp3|wav|woff|woff2|ttf|eot)",
+            "dest": "/public/$0"
         },
         {
             "src": "/(.*)",

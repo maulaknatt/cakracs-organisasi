@@ -75,7 +75,7 @@ export default {
         const resumeAudio = async () => {
             if (livekitRoom?.engine?.client?.audioContext?.state === 'suspended') {
                 await livekitRoom.engine.client.audioContext.resume();
-                console.log('VoiceStore: AudioContext resumed via click');
+
             }
             if (livekitRoom?.engine?.client?.audioContext?.state === 'running') {
                 document.removeEventListener('click', resumeAudio);
@@ -83,7 +83,7 @@ export default {
         };
         document.addEventListener('click', resumeAudio);
 
-        console.log('VoiceStore: Berhasil Inisialisasi (Graceful Support)');
+        // Silenced in production: VoiceStore initialized
     },
 
     _quickRestore() {
@@ -154,7 +154,7 @@ export default {
 
             // ✅ OFFICIAL WAY: Resume audio context via LiveKit helper
             await livekitRoom.startAudio();
-            console.log('VoiceStore: Room audio started');
+
 
             this._setupListeners(livekitRoom);
 
@@ -166,8 +166,7 @@ export default {
             try {
                 await livekitRoom.localParticipant.setMicrophoneEnabled(true);
                 this.muted = false;
-                console.log('VoiceStore: Microphone published:', livekitRoom.localParticipant.isMicrophoneEnabled);
-                console.log('VoiceStore: Local participant isSpeaking:', livekitRoom.localParticipant.isSpeaking);
+
             } catch (err) {
                 console.error('VoiceStore: Gagal aktifkan mic:', err);
                 this.muted = true;
@@ -206,7 +205,7 @@ export default {
         // Detect active speakers across the entire room (More reliable than IsSpeakingChanged)
         room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
             const speakerIds = speakers.map(s => String(s.identity).split('-')[0]);
-            console.log('VoiceStore: Active Speakers:', speakerIds);
+
 
             Object.keys(this.participants).forEach(chanId => {
                 this.participants[chanId] = (this.participants[chanId] || []).map(u => ({
@@ -240,9 +239,7 @@ export default {
             const pureId = String(p.identity).split('-')[0];
             const existing = (this.participants[chanId] || []).find(u => String(u.id) === pureId);
 
-            if (p.isSpeaking) {
-                console.log(`VoiceStore: Participant ${p.identity} is speaking (from room update)`);
-            }
+
 
             return {
                 id: pureId,
@@ -257,7 +254,7 @@ export default {
         });
 
         this.participants = { ...this.participants };
-        console.log(`VoiceStore: Updated participants for channel ${chanId}, count: ${allParticipants.length}`);
+
     },
 
     isMe(identity) {

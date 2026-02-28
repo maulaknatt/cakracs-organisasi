@@ -1,7 +1,8 @@
 import Echo from 'laravel-echo';
 
 import Pusher from 'pusher-js';
-Pusher.logToConsole = true;
+// Only enable Pusher logging in development, NOT production
+Pusher.logToConsole = import.meta.env.DEV;
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
@@ -10,3 +11,4 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     forceTLS: true,
 });
+

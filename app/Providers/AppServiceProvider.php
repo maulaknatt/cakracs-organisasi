@@ -24,10 +24,14 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
-        // Eager load role untuk user yang sedang login
+        // Eager load role untuk user yang sedang login (Safe for migration)
         view()->composer('*', function ($view) {
-            if (auth()->check()) {
-                auth()->user()->load('role');
+            try {
+                if (auth()->check() && auth()->user()) {
+                    auth()->user()->loadMissing('role');
+                }
+            } catch (\Exception $e) {
+                // Silently fail if database is not ready
             }
         });
     }

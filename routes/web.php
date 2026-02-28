@@ -3,15 +3,6 @@
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
-// AUTH
-Route::get('/rahasia-migrate-sekarang', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh --seed --force');
-        return "Berhasil Mas! Database sudah terisi semua tabel & data awal. Silakan balik ke Beranda.";
-    } catch (\Exception $e) {
-        return "Error: " . $e->getMessage();
-    }
-});
 
 Route::get('/login', [LoginController::class , 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class , 'login']);

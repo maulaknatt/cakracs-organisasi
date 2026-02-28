@@ -3,6 +3,16 @@
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
+// MIGRATION ROUTE
+Route::get('/gas-migrate-sekarang', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh --seed --force');
+        return "Berhasil Mas! Database sudah terisi semua tabel. Output: " . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Exception $e) {
+        return "Error Migrasi: " . $e->getMessage();
+    }
+});
+
 
 Route::get('/login', [LoginController::class , 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class , 'login']);
